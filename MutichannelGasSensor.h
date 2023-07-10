@@ -92,7 +92,7 @@ class MutichannelGasSensor {
     unsigned int adcValueR0_NH3_Buf;
     unsigned int adcValueR0_CO_Buf;
     unsigned int adcValueR0_NO2_Buf;
-
+	bool ready;
   public:
 
     uint8_t i2cAddress;     //I2C address of this MCU
@@ -113,8 +113,9 @@ class MutichannelGasSensor {
 
   public:
 
-    void begin(int address);
-    void begin();
+    int begin(int address);
+    int begin();
+	bool isReady();
     void changeI2cAddr(uint8_t newAddr);
     void powerOn(void);
     void powerOff(void);

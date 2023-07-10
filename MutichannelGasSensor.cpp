@@ -42,13 +42,25 @@ MutichannelGasSensor::MutichannelGasSensor() : __version(2), i2cAddress(0x19) {
 ** Function name:           begin
 ** Descriptions:            initialize I2C
 *********************************************************************************************************/
-void MutichannelGasSensor::begin(int address) {
+int MutichannelGasSensor::begin(int address) {
     __version = 1;          // version 1/2
     r0_inited = false;
-
     Wire.begin();
     i2cAddress = address;
-    __version = getVersion();
+	
+	ready = false;
+	Wire.beginTransmission(address);
+	int deviceOk =  Wire.endTransmission();
+	if (deviceOk != 0 )
+		return deviceOk;
+	
+	ready = true;
+    //__version = getVersion();
+	return 0;
+}
+
+bool MutichannelGasSensor::isReady() {
+	return ready;
 }
 
 unsigned char MutichannelGasSensor::getVersion() {
@@ -63,8 +75,8 @@ unsigned char MutichannelGasSensor::getVersion() {
     return 1;
 }
 
-void MutichannelGasSensor::begin() {
-    begin(DEFAULT_I2C_ADDR);
+int MutichannelGasSensor::begin() {
+    return begin(DEFAULT_I2C_ADDR);
 }
 
 /*********************************************************************************************************
